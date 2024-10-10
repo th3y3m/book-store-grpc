@@ -1,4 +1,5 @@
 [![CodeQL](https://github.com/th3y3m/book-store-grpc/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/th3y3m/book-store-grpc/actions/workflows/github-code-scanning/codeql)
+![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 # Welcome to Bookstore Microservices Repository
 
