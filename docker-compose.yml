@@ -14,6 +14,11 @@ services:
       - ./script.sql:/docker-entrypoint-initdb.d/script.sql # Mount the SQL script
     networks:
       - book_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   book_service:
     build:
@@ -24,7 +29,8 @@ services:
     environment:
       CONNECTION_STRING: host=postgres_service port=5432 user=postgres password=12345 dbname=BookStoreDb sslmode=disable
     depends_on:
-      - postgres_service
+      postgres_service:
+        condition: service_healthy
     networks:
       - book_network
 
@@ -37,7 +43,8 @@ services:
     environment:
       CONNECTION_STRING: host=postgres_service port=5432 user=postgres password=12345 dbname=BookStoreDb sslmode=disable
     depends_on:
-      - postgres_service
+      postgres_service:
+        condition: service_healthy
     networks:
       - book_network
 
@@ -59,5 +66,3 @@ volumes:
 
 networks:
   book_network:
-
-    # CONNECTION_STRING: host=host.docker.internal port=5432 user=postgres password=12345 dbname=BookStoreDb sslmode=disable
