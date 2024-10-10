@@ -1,51 +1,39 @@
 package main
 
-// import (
-// 	"log"
-// 	"net"
-// 	"th3y3m/book-store-grpc/pb"
-// 	repository "th3y3m/book-store-grpc/repo"
-// 	"th3y3m/book-store-grpc/service"
+import (
+	"context"
+	"log"
+	"net/http"
 
-// 	"google.golang.org/grpc"
-// 	"google.golang.org/grpc/reflection"
-// )
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
-// func main() {
-// 	lis, err := net.Listen("tcp", ":50051")
-// 	if err != nil {
-// 		log.Fatalf("Failed to listen: %v", err)
-// 	}
+	bookpb "th3y3m/book-store-grpc/book_service/pb"
+	userpb "th3y3m/book-store-grpc/user_service/pb"
+)
 
-// 	grpcServer := grpc.NewServer()
-// 	repo := repository.NewBookRepository()
-// 	bookService := service.NewBookService(repo)
+func main() {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 
-// 	pb.RegisterBookServiceServer(grpcServer, bookService)
+	mux := runtime.NewServeMux()
 
-// 	// Enable reflection for gRPC clients like Postman or grpcurl
-// 	reflection.Register(grpcServer)
+	// Register BookService
+	err := bookpb.RegisterBookServiceHandlerFromEndpoint(ctx, mux, "localhost:50051", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	if err != nil {
+		log.Fatalf("Failed to register BookService: %v", err)
+	}
 
-// 	log.Println("gRPC server is running on port 50051...")
-// 	if err := grpcServer.Serve(lis); err != nil {
-// 		log.Fatalf("Failed to serve: %v", err)
-// 	}
+	// Register UserService
+	err = userpb.RegisterUserServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	if err != nil {
+		log.Fatalf("Failed to register UserService: %v", err)
+	}
 
-// 	// dsn := "host=localhost user=postgres password=12345 dbname=BookStoreDb port=5432 sslmode=disable TimeZone=Asia/Ho_Chi_Minh"
-
-// 	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-// 	// if err != nil {
-// 	// 	log.Fatalf("Failed to connect to the database: %v", err)
-// 	// }
-
-// 	// // Auto-migrate models in the correct order to handle foreign key dependencies
-// 	// err = db.AutoMigrate(
-// 	// 	&repository.Book{},
-// 	// 	&repo.User{},
-// 	// )
-// 	// if err != nil {
-// 	// 	log.Fatalf("Failed to migrate the database: %v", err)
-// 	// }
-
-// 	// log.Println("Database migration completed successfully!")
-// }
+	log.Println("API Gateway is running on port 8080...")
+	if err := http.ListenAndServe(":8080", mux); err != nil {
+		log.Fatalf("Failed to serve: %v", err)
+	}
+}

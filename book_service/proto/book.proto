@@ -4,12 +4,36 @@ package proto;
 
 option go_package = "/pb";
 
+import "google/api/annotations.proto";
+
 service BookService {
-    rpc CreateBook(CreateBookRequest) returns (CreateBookResponse);
-    rpc GetBook(GetBookRequest) returns (GetBookResponse);
-    rpc UpdateBook(UpdateBookRequest) returns (UpdateBookResponse);
-    rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse);
-    rpc ListBooks(Empty) returns (ListBooksResponse);
+    rpc CreateBook(CreateBookRequest) returns (CreateBookResponse) {
+        option (google.api.http) = {
+            post: "/v1/books"
+            body: "book"
+        };
+    }
+    rpc GetBook(GetBookRequest) returns (GetBookResponse) {
+        option (google.api.http) = {
+            get: "/v1/books/{id}"
+        };
+    }
+    rpc UpdateBook(UpdateBookRequest) returns (UpdateBookResponse) {
+        option (google.api.http) = {
+            put: "/v1/books/{book.id}"
+            body: "book"
+        };
+    }
+    rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse) {
+        option (google.api.http) = {
+            delete: "/v1/books/{id}"
+        };
+    }
+    rpc ListBooks(Empty) returns (ListBooksResponse) {
+        option (google.api.http) = {
+            get: "/v1/books"
+        };
+    }
 }
 
 message Book {
