@@ -21,13 +21,13 @@ func main() {
 	mux := runtime.NewServeMux()
 
 	// Register BookService
-	err := bookpb.RegisterBookServiceHandlerFromEndpoint(ctx, mux, "localhost:50051", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	err := bookpb.RegisterBookServiceHandlerFromEndpoint(ctx, mux, "book_service:50051", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
 	if err != nil {
 		log.Fatalf("Failed to register BookService: %v", err)
 	}
 
 	// Register UserService
-	err = userpb.RegisterUserServiceHandlerFromEndpoint(ctx, mux, "localhost:50052", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	err = userpb.RegisterUserServiceHandlerFromEndpoint(ctx, mux, "user_service:50052", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
 	if err != nil {
 		log.Fatalf("Failed to register UserService: %v", err)
 	}

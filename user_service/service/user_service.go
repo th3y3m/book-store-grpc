@@ -22,7 +22,7 @@ func NewUserService(repo repository.UserRepository) *UserService {
 
 func (s *UserService) ListUsers(ctx context.Context, req *pb.EmptyUser) (*pb.ListUsersResponse, error) {
 
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("book_service:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Failed to connect to BookService: %v", err)
 	}

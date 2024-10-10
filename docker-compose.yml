@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres_service:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: BookStoreDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql # Mount the SQL script
+    networks:
+      - book_network
+
+  book_service:
+    build:
+      context: .
+      dockerfile: book_service/Dockerfile
+    ports:
+      - "50051:50051"
+    environment:
+      CONNECTION_STRING: host=postgres_service port=5432 user=postgres password=12345 dbname=BookStoreDb sslmode=disable
+    depends_on:
+      - postgres_service
+    networks:
+      - book_network
+
+  user_service:
+    build:
+      context: .
+      dockerfile: user_service/Dockerfile
+    ports:
+      - "50052:50052"
+    environment:
+      CONNECTION_STRING: host=postgres_service port=5432 user=postgres password=12345 dbname=BookStoreDb sslmode=disable
+    depends_on:
+      - postgres_service
+    networks:
+      - book_network
+
+  api_gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - book_service
+      - user_service
+    networks:
+      - book_network
+
+volumes:
+  postgres_data:
+
+
+networks:
+  book_network:
+
+    # CONNECTION_STRING: host=host.docker.internal port=5432 user=postgres password=12345 dbname=BookStoreDb sslmode=disable
