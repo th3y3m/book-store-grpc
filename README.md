@@ -1,3 +1,5 @@
+[![CodeQL](https://github.com/th3y3m/book-store-grpc/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/th3y3m/book-store-grpc/actions/workflows/github-code-scanning/codeql)
+
 # Welcome to Bookstore Microservices Repository
 
 This repository contains a Bookstore microservices application that uses gRPC for service communication, Docker for containerization, Protobuf for data serialization, and an API Gateway to expose RESTful endpoints for external clients.
