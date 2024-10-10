@@ -30,8 +30,8 @@ Before running the application, ensure you have the following installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/bookstore-microservices.git
-cd bookstore-microservices
+git clone https://github.com/th3y3m/book-store-grpc.git
+cd book-store-grpc
 ```
 
 ### Build and Run the Application
