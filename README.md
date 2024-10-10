@@ -29,12 +29,14 @@ Before running the application, ensure you have the following installed:
 ```bash
 git clone https://github.com/your-username/bookstore-microservices.git
 cd bookstore-microservices
+```
 
 ### Build and Run the Application
 To build and run the services, run the following command:
 
 ```bash
 docker-compose up --build
+```
 
 This will:
 
