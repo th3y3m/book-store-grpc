@@ -5,17 +5,16 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 // ConnectToPostgreSQL connects to a PostgreSQL database using GORM
 func ConnectToPostgreSQL() (*gorm.DB, error) {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
+	// err := godotenv.Load("../.env")
+	// if err != nil {
+	// 	log.Fatalf("Error loading .env file: %v", err)
+	// }
 
 	// Load the connection string from the environment variable
 	databaseURL := os.Getenv("CONNECTION_STRING")
